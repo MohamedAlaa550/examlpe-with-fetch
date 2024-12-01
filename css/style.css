@@ -3,3 +3,14 @@
     object-fit: cover;
     object-position: center;
 }
+
+
+.modal-body{
+    text-align: center;
+}
+
+.modal-body img{
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+}
