@@ -1,15 +1,18 @@
-var allRecpies =[]
+let allRecpies =[]
 
-var searchInput = document.getElementById("searchInput")
-var errorSearch = document.getElementById("errorSearch")
+const searchInput = document.getElementById("searchInput")
+const errorSearch = document.getElementById("errorSearch")
+const loadingScreen = document.querySelector(".loading-screen")
+
 
 
 
 getRecipes()
 async function getRecipes(meal = "pizza"){
    try {
-    var respons = await fetch(`https://forkify-api.herokuapp.com/api/search?q=${meal}`)
-    var finalResponse= await respons.json()
+loadingScreen.classList.remove("d-none")
+    let respons = await fetch(`https://forkify-api.herokuapp.com/api/search?q=${meal}`)
+    let finalResponse= await respons.json()
     allRecpies = finalResponse.recipes
     displayData()
     errorSearch.classList.add("d-none")
@@ -21,11 +24,14 @@ async function getRecipes(meal = "pizza"){
     document.getElementById("rowData").innerHTML = ""
     
    }
+   finally{
+    loadingScreen.classList.add("d-none")
+   }
 }
 
 function displayData(){
-    var cartona ='';
-    for(var i =0; i< allRecpies.length;i++){
+    let cartona ='';
+    for(let i =0; i< allRecpies.length;i++){
         cartona += `
           <div class="col-md-4">
                 <div class="card text-center">
@@ -41,12 +47,26 @@ function displayData(){
 }
 
 
+
 async function shwoInfo(id){
-    var response = await(await fetch(`https://forkify-api.herokuapp.com/api/get?rId=${id}`)).json()
-    var recipeInfo = response.recipe
+
+    try {
+        loadingScreen.classList.remove("d-none")
+
+        let response = await(await fetch(`https://forkify-api.herokuapp.com/api/get?rId=${id}`)).json()
+    let recipeInfo = response.recipe
     document.querySelector(".modal-body").innerHTML = `
      <img src="${recipeInfo.image_url}" alt="" class="w-100">
           <h3 class="my-3">${recipeInfo.title.split(" ", 2).join(" ")}</h3>`
+    } catch (error) {
+        console.log(error);
+    errorSearch.classList.remove("d-none")
+    errorSearch.innerHTML = "Meal Not Found !";
+    }
+    finally{
+        loadingScreen.classList.add("d-none")
+
+    }
 
 }
 
